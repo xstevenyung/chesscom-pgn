@@ -1,6 +1,6 @@
 {
-  "name": "Remove element on click",
-  "description": "Adds a context menu item that shows a panel upon click, from where you can choose to remove the clicked element.",
+  "name": "Chess.com to Lichess PGN",
+  "description": "Import any chess.com game into Lichess' game review engine automatically",
   "version": "1",
   "manifest_version": 3,
   "content_scripts": [

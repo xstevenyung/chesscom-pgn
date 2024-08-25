@@ -36,11 +36,21 @@ observer.observe(document.body, {
 });
 
 function handleGameReviewButton(gameReviewButton) {
+  const container = document.createElement('div')
+  container.style.marginLeft = "2rem";
+  container.style.marginRight = "2rem";
+  container.style.marginTop = "1rem";
+  container.style.marginBottom = "1rem";
+
   const lichessGameReviewButton = document.createElement('button');
   lichessGameReviewButton.type = 'button';
   lichessGameReviewButton.textContent = 'Lichess Review';
+  lichessGameReviewButton.style.padding = "1.5rem";
+  lichessGameReviewButton.style.width = "100%";
+  
+  container.appendChild(lichessGameReviewButton);
 
-  gameReviewButton.parentNode?.insertBefore(lichessGameReviewButton, gameReviewButton.nextSibling);
+  gameReviewButton.parentNode?.insertBefore(container, gameReviewButton.nextSibling);
 
   lichessGameReviewButton.addEventListener('click', async (event) => {
     document.querySelector('.share.live-game-buttons-button')?.click();

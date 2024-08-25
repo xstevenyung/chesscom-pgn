@@ -1,26 +1,41 @@
-function waitForElement(selector, timeout = 5000) {
-  return new Promise((resolve, reject) => {
-    const startTime = Date.now();
-    const intervalId = setInterval(() => {
+function waitForElement(selector) {
+  return new Promise((resolve) => {
+    const observer = new MutationObserver((mutations, obs) => {
       const element = document.querySelector(selector);
       if (element && element.offsetParent !== null) {
-        clearInterval(intervalId);
+        obs.disconnect();
         resolve(element);
-      } else if (Date.now() - startTime > timeout) {
-        clearInterval(intervalId);
-        reject(new Error(`Element ${selector} not found or not visible within ${timeout}ms`));
       }
-    }, 500);
+    });
 
-    setTimeout(() => {
-      clearInterval(intervalId);
-      reject(new Error(`Element ${selector} not found or not visible within ${timeout}ms`));
-    }, timeout);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    // Check if the element already exists
+    const element = document.querySelector(selector);
+    if (element && element.offsetParent !== null) {
+      observer.disconnect();
+      resolve(element);
+    }
   });
 }
 
-waitForElement('.game-over-review-button-component').then((gameReviewButton) => {
-  // const lichessGameReviewButton = gameReviewButton.cloneNode(true);
+const observer = new MutationObserver((mutations, obs) => {
+  const gameReviewButton = document.querySelector('.game-over-review-button-component:not([data-lichess="true"])') || document.querySelector('.game-review-buttons-component:not([data-lichess="true"])');
+  if (gameReviewButton && gameReviewButton.offsetParent !== null) {
+    handleGameReviewButton(gameReviewButton);
+    gameReviewButton.setAttribute('data-lichess', 'true');
+  }
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true,
+});
+
+function handleGameReviewButton(gameReviewButton) {
   const lichessGameReviewButton = document.createElement('button');
   lichessGameReviewButton.type = 'button';
   lichessGameReviewButton.textContent = 'Lichess Review';
@@ -44,4 +59,4 @@ waitForElement('.game-over-review-button-component').then((gameReviewButton) => 
     
     chrome.runtime.sendMessage({type: 'pgn', payload: {pgn}}).then(response => console.log(response));
   });
-}).catch(error => console.error('Error:', error));
+}

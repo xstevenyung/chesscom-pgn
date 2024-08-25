@@ -6,7 +6,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://*.chess.com/game/live/*"
+        "https://*.chess.com/game/live/*",
+        "https://*.chess.com/game/*"
       ],
       "js": [
         "content-script.js"
